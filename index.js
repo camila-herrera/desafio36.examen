@@ -3,10 +3,35 @@ const app = express();
 
 const cafes = require("./cafes.json")
 
-app.listen(3000, console.log("SERVER ON"))
+app.listen(3001, console.log("SERVER ON en 3001"))
 
 app.use(express.json())
 
+app.get("/", (req, res) => {
+    res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>API de Cafés</title>
+    </head>
+    <body>
+        <h1>Bienvenido a la API de Cafés</h1>
+        <p>Esta API permite realizar operaciones CRUD sobre una lista de cafés.</p>
+        <h2>Endpoints disponibles</h2>
+        <ul>
+            <li><strong>GET /cafes</strong>: Obtiene la lista de todos los cafés.</li>
+            <li><strong>GET /cafes/:id</strong>: Obtiene un café específico por su ID.</li>
+            <li><strong>POST /cafes</strong>: Agrega un nuevo café. Requiere un cuerpo con <code>{ id, nombre }</code>.</li>
+            <li><strong>PUT /cafes/:id</strong>: Actualiza un café por ID. El ID del cuerpo debe coincidir con el de los parámetros.</li>
+            <li><strong>DELETE /cafes/:id</strong>: Elimina un café por ID. Requiere un token en las cabeceras.</li>
+        </ul>
+    </body>
+    </html>
+    `);
+  });
+  
 app.get("/cafes", (req, res) => {
     res.status(200).send(cafes)
 })
@@ -69,6 +94,6 @@ app.delete("/cafes/:id", (req, res) => {
 
 app.use("*", (req, res) => {
     res.status(404).send({ message: "La ruta que intenta consultar no existe" })
-})
+});
 
 module.exports = app
